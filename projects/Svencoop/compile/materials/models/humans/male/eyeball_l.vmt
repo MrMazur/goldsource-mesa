@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$color"				"[1 1 1]"
+	"$baseTexture"			"models/humans/male/eyeball_l"
+	"$selfIllum"			0
+	"$translucent"			0
+	"$alphatest"			1
+}
+// Created With MESA by www.puppet-master.net

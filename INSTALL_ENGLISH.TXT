@@ -1,0 +1,64 @@
+English :
+
+
+Installation Mesa 2.0
+
+1. Download Mesa on: http://puppet-master.net/mesa-for-maya/
+
+2. Open the downloaded archive file with a program like WinRAR, 7-zip or winZip.
+You must extract the Mesa directory where you want on your hard drive.
+For example: C :/ MESA /
+
+
+3. Once Mesa is decompressed on your hard drive, go to the directory "CONFIG".
+Made a right click with your mouse on the file MESA_CONFIG.BAT because we will edit (modify) the file
+to define some information about the location of Steam and the Source SDK tool engine.
+
+
+Note: The "MESA_CONFIG.BAT.BAK" file is a copy of MESA_CONFIG.BAT, the file is read-only
+to prevent possible mishandling.
+
+
+The definition of the path to "STEAMDIR" is a bit special, the access path must be defined to include a "quote at the beginning but not at the end.
+Also it is important that the paths do not contain any white space at the end of the defined path.
+
+[Image Notepad]
+
+Check the details of the use of environment variables required by MESA (# 1) to fill properly the information needed.
+MESA is highly sensitive to the HDD path, it does not take much for the tools do not work normally.
+
+4. So once the completed information, save the changes and close the file, then run the file and double-click.
+
+A cmd.exe window will quickly open and close it if no problem was encountered.
+It is possible that on some computers, the execution of the BAT files and requires to be run as administrator.
+If you encounter problems, read the help section: 
+
+Read More : # 2 how  to check the user environment variables
+
+
+
+
+5. Now it is time to install the Shelf in Maya.
+Run the "Mesa/config/Mesa_Shelf_Install.bat"
+
+The Shelf is supposed to be copied to "c :/User/Documents/Maya/[ MAYAVERSION ]/Prefs/shelves/".
+
+Read more : # 3 - Manually Install the Shelf)
+
+Here MESA is Installed.
+The next two steps required in order to use Mesa before starting Maya.
+
+ A. Define the environment variables for your project or target games.
+
+Important: Maya updates the environment variables only after a restart of Maya.
+
+ B. The first step in maya, will define the Maya Project (setproject) on one of the directories in this MESADIR%%/projects/"
+
+Do not forget to save your Maya Scene into the "Scenes" directory of the projects workspace.
+
+Read more : # 4 - Project  Workspace )
+
+
+Have Fun 
+Fuzz
+
