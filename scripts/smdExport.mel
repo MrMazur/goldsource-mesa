@@ -252,7 +252,32 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 			{
 			string $normVert = $vertexList[$vertex];
 
-			fprint $fileHandle "0";
+				/////////// get the skin cluster info ///////////////
+				string $skinVert[] = `polyListComponentConversion -tv $normVert`;
+				$normVert = $skinVert[0];
+				int $influenceCount;
+				float $skinWeights[] = `skinPercent -ib .05 -q -v $skinCluster $normVert`;
+				$influenceCount = `size $skinWeights`;
+				if ($influenceCount > 4) warning ("vertex " + $skinVert[0] + " has " + $influenceCount + " skin weights");
+				string $skinXforms[] = `skinPercent -ib .05 -q -t $skinCluster $normVert`;
+
+				int $z;
+				for ($z = 0; $z <$influenceCount; $z++)
+					{
+					string $testName = ("\"" + $skinXforms[$z] + "\"");
+
+					int $boneIndex = DetermineBoneIndex( $testName );
+					if ($boneIndex >= 0)
+						{
+						fprint $fileHandle $boneIndex;
+						}
+					else
+						{
+						$errorOccurred = 1;
+						fprint $fileHandle "0";
+						}  
+					}
+        /////////////////////////////////////////////////////  
 
 			// get vert position
 			float $worldPos[3] = `xform -q -t -ws $normVert`;
@@ -293,67 +318,8 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 				fprint $fileHandle $uv;
 				}
 
-			// get list of skin weights or assign all verts to the object
-			// if there is no skin cluster
-			if (!$hasSkinCluster)
-				{
-				fprint $fileHandle " 1 ";
-				if ($fakeXform == "")
-					{
-					fprint $fileHandle "0";
-					}
-				else
-					{
-					string $testName = ("\"" + $fakeXform + "\"");
-					int $boneIndex = DetermineBoneIndex( $testName );
-					if ($boneIndex >= 0)
-						{
-						fprint $fileHandle $boneIndex;
-						}
-					else
-						{
-						$errorOccurred = 1;
-						fprint $fileHandle "0";
-						}
-					}
-				fprint $fileHandle " 1\n";
-				}
-			else
-				// get the skin cluster info
-				{
-				string $skinVert[] = `polyListComponentConversion -tv $normVert`;
-				$normVert = $skinVert[0];
-				int $influenceCount;
-				float $skinWeights[] = `skinPercent -ib .05 -q -v $skinCluster $normVert`;
-				$influenceCount = `size $skinWeights`;
-				if ($influenceCount > 4) warning ("vertex " + $skinVert[0] + " has " + $influenceCount + " skin weights");
-				string $skinXforms[] = `skinPercent -ib .05 -q -t $skinCluster $normVert`;
-
-				fprint $fileHandle " ";
-				fprint $fileHandle $influenceCount;
-				int $z;
-				for ($z = 0; $z <$influenceCount; $z++)
-					{
-					string $testName = ("\"" + $skinXforms[$z] + "\"");
-
-					int $boneIndex = DetermineBoneIndex( $testName );
-					fprint $fileHandle " ";
-					if ($boneIndex >= 0)
-						{
-						fprint $fileHandle $boneIndex;
-						}
-					else
-						{
-						$errorOccurred = 1;
-						fprint $fileHandle "0";
-						}
-
-					string $weight = `numFormat $skinWeights[$z] 3 5`;
-					fprint $fileHandle " ";
-					fprint $fileHandle $weight;
-					}
 				fprint $fileHandle "\n";
-				}
+				
 			}
 
 		if ( `progressWindow -q -isCancelled` || $errorOccurred )
