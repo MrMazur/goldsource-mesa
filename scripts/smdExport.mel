@@ -267,6 +267,7 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 					string $testName = ("\"" + $skinXforms[$z] + "\"");
 
 					int $boneIndex = DetermineBoneIndex( $testName );
+					fprint $fileHandle " ";
 					if ($boneIndex >= 0)
 						{
 						fprint $fileHandle $boneIndex;
