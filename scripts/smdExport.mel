@@ -248,9 +248,52 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 
 		int $errorOccurred = 0;
 		int $lastVertex;
+    
 		for ( $lastVertex = $vertex + 3; $vertex < $lastVertex; $vertex++ )
 			{
+      string $line = ""; 
 			string $normVert = $vertexList[$vertex];
+
+			$line = "9966699";
+
+			// get vert position
+			float $worldPos[3] = `xform -q -t -ws $normVert`;
+			int $q;
+			for ($q = 0; $q < 3; $q++)
+				{
+				string $pos = `numFormat $worldPos[$q] 5 8`;
+				$line = $line + " ";
+				$line = $line + $pos;
+				}
+
+			// vertex normal
+			float $normal[3] = `polyNormalPerVertex -q -xyz $normVert`;
+			for ($q = 0; $q < 3; $q++)
+				{
+				string $norm = `numFormat $normal[$q] 5 7`;
+				$line = $line + " ";
+				$line = $line + $norm;
+				}
+
+			// UV Coords
+			string $texVerts[2] = `polyListComponentConversion -toUV $normVert`;
+			float $uvCoords[2];
+			if (`size $texVerts` == 0)
+				{
+				print ($normVert + "has bad UV coordinates\n");
+				$uvCoords = {0,0};
+				}
+			else
+				{
+				$uvCoords = `polyEditUV -q $texVerts[0]`;
+				}
+			
+			for ($q = 0; $q < 2; $q++)
+				{
+				string $uv = `numFormat $uvCoords[$q] 5 7`;
+				$line = $line + " ";
+				$line = $line + $uv;
+				}
 
 				/////////// get the skin cluster info ///////////////
 				string $skinVert[] = `polyListComponentConversion -tv $normVert`;
@@ -270,7 +313,8 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 					fprint $fileHandle " ";
 					if ($boneIndex >= 0)
 						{
-						fprint $fileHandle $boneIndex;
+            string $bi = $boneIndex;
+            $line = `substitute "9966699" $line $bi`;
 						}
 					else
 						{
@@ -278,47 +322,8 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
 						fprint $fileHandle "0";
 						}  
 					}
-        /////////////////////////////////////////////////////  
-
-			// get vert position
-			float $worldPos[3] = `xform -q -t -ws $normVert`;
-			int $q;
-			for ($q = 0; $q < 3; $q++)
-				{
-				string $pos = `numFormat $worldPos[$q] 5 8`;
-				fprint $fileHandle " ";
-				fprint $fileHandle $pos;
-				}
-
-			// vertex normal
-			float $normal[3] = `polyNormalPerVertex -q -xyz $normVert`;
-			for ($q = 0; $q < 3; $q++)
-				{
-				string $norm = `numFormat $normal[$q] 5 7`;
-				fprint $fileHandle " ";
-				fprint $fileHandle $norm;
-				}
-
-			// UV Coords
-			string $texVerts[2] = `polyListComponentConversion -toUV $normVert`;
-			float $uvCoords[2];
-			if (`size $texVerts` == 0)
-				{
-				print ($normVert + "has bad UV coordinates\n");
-				$uvCoords = {0,0};
-				}
-			else
-				{
-				$uvCoords = `polyEditUV -q $texVerts[0]`;
-				}
-			
-			for ($q = 0; $q < 2; $q++)
-				{
-				string $uv = `numFormat $uvCoords[$q] 5 7`;
-				fprint $fileHandle " ";
-				fprint $fileHandle $uv;
-				}
-
+        //////////////////////////////////////////////////// 
+        fprint $fileHandle $line; 
 				fprint $fileHandle "\n";
 				
 			}
