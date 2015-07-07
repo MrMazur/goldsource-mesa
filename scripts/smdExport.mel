@@ -806,6 +806,9 @@ proc exportSkeleton( int $fileHandle )
     
     if ($fixNamespace == 1)
     {
+      string $isbip = `match "Bip01" $noRef`;
+      if ( $isbip == "Bip01")
+      {
      $noRef = `substitute "_" $noRef " "`;
      $noRef = `substitute "_" $noRef " "`;
      $noRef = `substitute "_" $noRef " "`;
@@ -816,6 +819,7 @@ proc exportSkeleton( int $fileHandle )
      $noRef = `substitute "_" $noRef " "`;
      $noRef = `substitute "_" $noRef " "`;
      $noRef = `substitute "_" $noRef " "`;
+      }
     }
 		
 		$line = `substitute $lineItems[1] $line $noRef`;
