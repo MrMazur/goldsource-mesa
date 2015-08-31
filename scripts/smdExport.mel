@@ -251,7 +251,7 @@ proc int smdGetTriangles( int $fileHandle, string $mesh )
     
 		for ( $lastVertex = $vertex + 3; $vertex < $lastVertex; $vertex++ )
 			{
-      string $line = ""; 
+			string $line = ""; 
 			string $normVert = $vertexList[$vertex];
 
 			$line = "9966699";
@@ -934,7 +934,7 @@ proc int buildExportLists( string $meshList[] )
 	select -clear;
 	string $rootNodes[] = `listUnselected`;
 
-	$g_smdIgnoreList = `ls 			
+	$g_smdIgnoreList = `ls			
 		-type buttonManip
 		-type pointConstraint
 		-type orientConstraint
@@ -942,7 +942,7 @@ proc int buildExportLists( string $meshList[] )
 		-type poleVectorConstraint
 		-type ikHandle
 		-type ikEffector
-		-type place3dTexture
+		-type place3dTexture  
 		`;
 	string $g_smdIgnoreListTheseTransforms[] = `ls -type camera
 		-type light
@@ -950,6 +950,8 @@ proc int buildExportLists( string $meshList[] )
 		-type nurbsCurve
 		-type nurbsSurface
 		-type place3dTexture
+    -type mesh 
+    -type unknownDag
 		`;
     
 	string $rm;
@@ -965,7 +967,7 @@ proc int buildExportLists( string $meshList[] )
 		if (!$ok) return 0;
 		}
     
-	string $jointList[] = `ls -head 1 -type joint`;
+	string $jointList[] = $jointList = `stringArrayRemove $g_smdIgnoreList $rootNodes`;
 
 	$meshList = `ls -type mesh -ni`;
 	string $parent[] = listRelatives("-p","-path",$meshList);
